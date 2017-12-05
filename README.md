@@ -4,9 +4,9 @@ A lightweight framework for paralell computation of trials in reinforcement lear
 ## Installation
 You can run RLUnit on any docker swarm:
 
-    curl https://github.com/FirefoxMetzger/RLUnit/RLUnit.yml | docker stack deploy -c - RLUnit
+    curl https://raw.githubusercontent.com/FirefoxMetzger/RLUnit/master/RLUnit.yml | docker stack deploy -c - RLUnit
     
-It listens to requests on `Port 5000` and serves the resulting data on `Port 5003`. 
+It listens to requests on __Port 5000__. 
 
 __Note:__ You can always launch a single node swarm locally via: `docker swarm init`
 
@@ -17,11 +17,11 @@ To add a the [`example_agent`](https://gist.github.com/FirefoxMetzger/e2a42002b2
 
 This assumes that the RLUnit runs at `127.0.0.1`. After computation you can collect the results
 
-    curl -X GET http://127.0.0.1:5003/results/agent/example_agent > example_agent.zip
+    curl -X GET http://127.0.0.1:5000/results/agent/example_agent > example_agent.zip
 
 If you are impatient, you can check the current task queue to see what is still pending
 
-    curl -X GET localhost:5000/queue/list
+    curl -X GET 127.0.0.1:5000/queue/list
 
 It is worth noting that the `example_agent` can be run on it's own and does not require RLUnit to work. This is very useful for both, rapidly iterating over the agent's code and sharing it with others.
 
@@ -33,6 +33,8 @@ RLUnit looks for a variable called `spec` in the agent's namespace. It is a dict
         "saved_files":["episode.npy"], # files contained in the results.zip
         "trial_func":"run_trial" # the function that runs a single trial
     }
+    
+If `num_trials` is missing, it will set `num_trials = 1` and if `saved_files` is missing, it will not save anything. However, you will always get everything the agent `prints` to stdout as a `stdout.log`. (Other things that write to the stdout buffer are also logged.)
     
 ### Trial func
 The agent's `trial_func` is called for each trial. As the name implies it is expected that this function calculates a single trial. The precise name can be modified via the `spec`. If not found it defaults to `run_trial(trial_index)` and falls back to `main`, if neither `spec["trial_func"]` nor `<module>.run_trial(trial_index)` are defined.
