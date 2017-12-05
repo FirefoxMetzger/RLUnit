@@ -1,0 +1,6 @@
+flask
+flask-restful
+numpy
+requests
+gym
+uwsgi

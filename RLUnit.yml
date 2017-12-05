@@ -1,0 +1,23 @@
+version: "3.1"
+
+services:
+    worker:
+        image: firefoxmetzger/rl_unit_worker
+        networks:
+            - swarm
+    distributor:
+        image: firefoxmetzger/rl_unit_distributor
+        networks:
+            - swarm
+    hub:
+        image: firefoxmetzger/rl_unit_hub
+        networks:
+            - swarm
+    nginx:
+        image: firefoxmetzger/rl_unit_nginx
+        ports: 
+            - "5000:5000"
+        networks:
+            - swarm
+networks:
+  swarm:
